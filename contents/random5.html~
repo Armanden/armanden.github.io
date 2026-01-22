@@ -3,14 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> <link rel="stylesheet" href="../style.css">
-    <title>Just Learned html</title>
+    <title>Welcome to the Special Guild</title>
 </head>
 <body>
     <div>
-        <h1>Just Learned html</h1>
+        <h1>Welcome to the Special Guild</h1>
         <p>Published on: <time datetime="2026-01-23">January 23, 2026</time></p>
-        <p>So my thoughts on it are quite good as I do like markup languages and html is very good at ordering stuff but it does take too long to write.</p>
-        <a href="../index.html">Back to Blog</a>
+        <p>But first to enter you got to solve this puzzle.</p>
+
+//look at source
+
+	<a href="../index.html">Back to Blog</a>
     </div>
 </body>
 </html>
