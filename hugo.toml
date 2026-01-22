@@ -1,16 +1,6 @@
 baseURL = '[https://armanden.github.io/](https://armanden.github.io/)'
 languageCode = 'en-us'
 title = 'Arman den'
-theme = 'congo'
-enableRobotsTXT = true
+theme = 'lugo'
 
-
-[params.author]
-name = "Arman den"
-
-headline = "A generally awesome human"
-bio = "A little bit about me"
-links = [
-  { github = "https://github.com/armanden" }
-]
 
