@@ -1,6 +1,6 @@
 # armanden.github.io
 
-https://armanden.github.io
+link: https://armanden.github.io
 
 This is a test, new to github pages lol
 
