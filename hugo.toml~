@@ -1,6 +1,8 @@
 baseURL = '[https://armanden.github.io/](https://armanden.github.io/)'
 languageCode = 'en-us'
-title = 'Arman den'													
+title = 'Arman den'
+theme = 'congo'
+enableRobotsTXT = true
 summaryLength = 30
 
 [pagination]
