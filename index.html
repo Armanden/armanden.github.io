@@ -3,75 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Simple Website</title>
+    <title>My Blog</title>
+    <link rel="stylesheet" href="style.css"> <!-- Link to your CSS stylesheet -->
     <style>
         body {
             font-family: Arial, sans-serif;
+            line-height: 1.6;
             margin: 0;
             padding: 0;
-            line-height: 1.6;
         }
         header {
             background: #333;
             color: #fff;
-            padding: 1rem;
+            padding: 1rem 0;
             text-align: center;
         }
-        nav {
-            margin: 1rem 0;
-        }
-        nav a {
-            margin: 0 15px;
-            color: #fff;
-            text-decoration: none;
-        }
-        main {
+        .container {
+            width: 80%;
+            margin: 0 auto;
             padding: 20px;
         }
+        .post {
+            border: 1px solid #ddd;
+            margin: 20px 0;
+            padding: 10px;
+        }
+        .post h2 {
+            margin: 0;
+        }
+        .post p {
+            margin: 10px 0;
+        }
         footer {
+            text-align: center;
+            padding: 1rem 0;
             background: #333;
             color: #fff;
-            text-align: center;
-            padding: 1rem;
-            position: fixed;
+            position: relative;
             bottom: 0;
             width: 100%;
         }
     </style>
 </head>
 <body>
+    <header>
+        <h1>Welcome to My Blog</h1>
+        <p>Your go-to source for awesome articles!</p>
+    </header>
 
-<header>
-    <h1>Welcome to My Website</h1>
-    <nav>
-        <a href="#home">Home</a>
-        <a href="#about">About</a>
-        <a href="#services">Services</a>
-        <a href="#contact">Contact</a>
-    </nav>
-</header>
+    <div class="container">
+        <div class="post">
+            <h2><a href="contents/post1.html">Blog Post Title 1</a></h2>
+            <p>Published on: <time datetime="2026-01-01">January 1, 2026</time></p>
+            <p>Summary of the blog post goes here. This is just a brief introduction to the content. Click the title to read more!</p>
+        </div>
+        
+        <div class="post">
+            <h2><a href="contents/post2.html">Blog Post Title 2</a></h2>
+            <p>Published on: <time datetime="2026-01-02">January 2, 2026</time></p>
+            <p>Summary of another blog post goes here. This is just a brief introduction to the content. Click the title to read more!</p>
+        </div>
 
-<main>
-    <section id="home">
-        <h2>Home</h2>
-        <p>This is the home page of my simple website.</p>
-    </section>
-    
-    <section id="about">
-        <h2>About</h2>
-        <p>Here is some information about myself .</p>
-    </section>
-    
-    
-    <section id="contact">
-        <h2>Contact</h2>
-        <p>How to contact me ?</p>
-    </section>
-</main>
+        <!-- More blog posts can be added here in similar structure -->
+    </div>
 
-<footer>
-    <p> 2026 This is ai</p>
-</footer>
-
+    <footer>
+        <p>&copy; 2026 My Blog. All rights reserved.</p>
+    </footer>
 </body>
 </html>
