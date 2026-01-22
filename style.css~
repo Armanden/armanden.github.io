@@ -1,0 +1,91 @@
+/* Fun Styles for a Web Page */
+
+/* Body and Background */
+body {
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    background-color: #ffefba; /* light yellow */
+    color: #333333;
+    margin: 0;
+    padding: 0;
+}
+
+/* Header */
+header {
+    background-color: #ff6f61; /* coral */
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+    font-size: 2.5em;
+    border-bottom: 5px solid #ff3d00; /* orange */
+}
+
+/* Main Content */
+main {
+    padding: 20px;
+}
+
+/* Fun Buttons */
+button {
+    background-color: #ffcc00; /* yellow */
+    border: none;
+    color: white;
+    padding: 15px 25px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 1.5em;
+    margin: 10px;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+button:hover {
+    background-color: #ffb300; /* darker yellow */
+    transform: scale(1.1);
+}
+
+/* Fun Links */
+a {
+    color: #ff3d00; /* orange */
+    text-decoration: none;
+    font-weight: bold;
+}
+
+a:hover {
+    text-decoration: underline;
+    color: #d31d00; /* dark red */
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 10px;
+    background-color: #ff6f61; /* coral */
+    color: white;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+/* Fun Cards */
+.card {
+    background-color: #ffffff;
+    border: 2px solid #ff6f61;
+    border-radius: 15px;
+    padding: 20px;
+    margin: 15px 0;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Images */
+img {
+    border-radius: 15px;
+    max-width: 100%;
+    height: auto;
+    transition: transform 0.3s;
+}
+
+img:hover {
+    transform: scale(1.05);
+}

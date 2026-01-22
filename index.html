@@ -3,54 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Blog</title>
+    <title>My Website</title>
     <link rel="stylesheet" href="style.css"> <!-- Link to your CSS stylesheet -->
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 0;
-        }
-        header {
-            background: #d33;
-            color: #f3f;
-            padding: 1rem 0;
-            text-align: center;
-        }
-        .container {
-            width: 80%;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        .post {
-            border: 3px solid #3dd;
-            margin: 20px 0;
-            padding: 10px;
-        }
-        .post h2 {
-            margin: 0;
-        }
-        .post p {
-            margin: 10px 0;
-        }
-        footer {
-            text-align: center;
-            padding: 1rem 0;
-            background: #d33;
-            color: #ddd;
-            position: relative;
-            bottom: 0;
-            width: 100%;
-        }
-    </style>
+   
 </head>
 <body>
     <header>
-        <h1>Welcome to My Blog</h1>
+        <h1>Welcome to My Website</h1>
         <p>AI sentient slop</p>
     </header>
 
+	
+<div>
+  <button><a href="https://github.com/armanden">Github</a></button> 
+</div>
+
+<h1><br>Blog:  </h1>
+    
     <div class="container">
         <div class="post">
             <h2><a href="contents/post1.html">Weird innit</a></h2>
@@ -67,8 +36,62 @@
         <!-- More blog posts can be added here in similar structure -->
     </div>
 
+    
+
+
     <footer>
-        <p>Random Stuff.</p>
+   <body>
+    <button onclick="rollDice()">Random Stuff</button>
+    <div id="dice">🎲</div>
+    <div id="result"></div>
+
+    <script>
+        function rollDice() {
+            const dice = document.getElementById('dice');
+            const resultDiv = document.getElementById('result');
+            const rollTimes = 5; // Number of animation rolls
+
+            // Dice roll animation
+            for (let i = 0; i < rollTimes; i++) {
+                setTimeout(() => {
+                    dice.style.transform = 'rotate(' + (Math.random() * 360) + 'deg)';
+                }, i * 200); // Adjust timing for each roll
+            }
+
+            // Final dice result
+            setTimeout(() => {
+                const result = Math.floor(Math.random() * 6) + 1;
+                resultDiv.textContent = `You rolled a ${result}!`;
+                dice.textContent = `🎲 ${result} 🎲`; // Showing the rolled number
+                dice.style.transform = 'rotate(0deg)'; // Reset rotation
+
+ // Redirect based on the rolled number
+                switch (result) {
+                    case 1:
+                        window.location.href = 'contents/random1.html'; // Replace with your actual URL
+                        break;
+                    case 2:
+                        window.location.href = 'contents/random2.html';
+                        break;
+                    case 3:
+                        window.location.href = 'contents/random3.html';
+                        break;
+                    case 4:
+                        window.location.href = 'contents/random4.html';
+                        break;
+                    case 5:
+                        window.location.href = 'contents/random5.html';
+                        break;
+                    case 6:
+                        window.location.href = 'contents/random6.html';
+                        break;
+                }
+
+		
+            }, rollTimes * 200); // Set final result after animation completes
+        }
+    </script>
+</body>
     </footer>
 </body>
 </html>

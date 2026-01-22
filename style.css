@@ -1,0 +1,73 @@
+/* Polished Dark Theme Styles */
+
+/* Body */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #1e1e2f; /* dark navy */
+    color: #e0e0e0;
+    margin: 0;
+    padding: 20px;
+}
+
+/* Header */
+header {
+    background: #3d3d5b; /* purple */
+    color: white;
+    text-align: center;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+/* Main Content */
+main {
+    max-width: 800px; 
+    margin: auto;
+}
+
+/* Button */
+button {
+    background: #4a90e2; /* light blue */
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.3s;
+}
+
+button:hover {
+    background: #357ab8; /* darker blue */
+    transform: scale(1.05);
+}
+
+/* Links */
+a {
+    color: #a1c4fd; /* light purple */
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+    color: #d3a8ff; /* darker purple */
+}
+
+/* Card Component */
+.card {
+    background-color: #2e2e4c; /* slightly lighter navy */
+    border: 1px solid #4a90e2; /* blue */
+    border-radius: 10px;
+    padding: 15px;
+    margin: 15px 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 15px;
+    background: #3d3d5b; /* purple */
+    color: white;
+    border-radius: 10px;
+    margin-top: 20px;
+}
