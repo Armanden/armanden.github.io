@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sudoku Game</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+
+        #gameContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        canvas {
+            border: 2px solid #333;
+            background-color: white;
+            cursor: pointer;
+        }
+
+        #instructions {
+            font-size: 14px;
+            color: #333;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="gameContainer">
+        <h1>Sudoku</h1>
+        <canvas id="gameCanvas" width="540" height="600"></canvas>
+        <div id="instructions">
+            <p><strong>Controls:</strong> 1-9: Enter | DEL: Clear | R: Reset | W: New Game</p>
+        </div>
+    </div>
+
+    <script>
+        const GRID_SIZE = 9;
+        const CELL_SIZE = 60;
+        const PANEL_WIDTH = 540;
+        const PANEL_HEIGHT = 600;
+
+        class Cell {
+            constructor() {
+                this.value = 0;      // Current value (0 = empty)
+                this.original = 0;   // Original puzzle value (can't be changed)
+            }
+        }
+
+        class GameState {
+            constructor() {
+                this.grid = [];
+                for (let i = 0; i < 9; i++) {
+                    this.grid[i] = [];
+                    for (let j = 0; j < 9; j++) {
+                        this.grid[i][j] = new Cell();
+                    }
+                }
+                this.selectedRow = -1;
+                this.selectedCol = -1;
+                this.isWon = 0;
+                this.mistakes = 0;
+            }
+        }
+
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const gameState = new GameState();
+
+        // Initialize game
+        function initializeGame() {
+            gameState.selectedRow = -1;
+            gameState.selectedCol = -1;
+            gameState.isWon = 0;
+            gameState.mistakes = 0;
+            generatePuzzle();
+        }
+
+        // Check if a number is valid at a position
+        function isValidPlacement(row, col, num) {
+            // Check row
+            for (let i = 0; i < 9; i++) {
+                if (gameState.grid[row][i].value === num) return false;
+            }
+
+            // Check column
+            for (let i = 0; i < 9; i++) {
+                if (gameState.grid[i][col].value === num) return false;
+            }
+
+            // Check 3x3 box
+            const boxRow = Math.floor(row / 3) * 3;
+            const boxCol = Math.floor(col / 3) * 3;
+            for (let i = boxRow; i < boxRow + 3; i++) {
+                for (let j = boxCol; j < boxCol + 3; j++) {
+                    if (gameState.grid[i][j].value === num) return false;
+                }
+            }
+
+            return true;
+        }
+
+        // Clear the board
+        function clearBoard(tempGrid) {
+            for (let i = 0; i < 9; i++) {
+                for (let j = 0; j < 9; j++) {
+                    tempGrid[i][j] = 0;
+                }
+            }
+        }
+
+        // Solve sudoku using backtracking
+        function solveSudoku(tempGrid, row, col) {
+            if (row === 9) return true;
+
+            let nextRow = row;
+            let nextCol = col + 1;
+            if (nextCol === 9) {
+                nextRow++;
+                nextCol = 0;
+            }
+
+            if (tempGrid[row][col] !== 0) {
+                return solveSudoku(tempGrid, nextRow, nextCol);
+            }
+
+            for (let num = 1; num <= 9; num++) {
+                let valid = true;
+
+                // Check row
+                for (let i = 0; i < 9; i++) {
+                    if (tempGrid[row][i] === num) {
+                        valid = false;
+                        break;
+                    }
+                }
+
+                // Check column
+                if (valid) {
+                    for (let i = 0; i < 9; i++) {
+                        if (tempGrid[i][col] === num) {
+                            valid = false;
+                            break;
+                        }
+                    }
+                }
+
+                // Check 3x3 box
+                if (valid) {
+                    const boxRow = Math.floor(row / 3) * 3;
+                    const boxCol = Math.floor(col / 3) * 3;
+                    for (let i = boxRow; i < boxRow + 3; i++) {
+                        for (let j = boxCol; j < boxCol + 3; j++) {
+                            if (tempGrid[i][j] === num) {
+                                valid = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (valid) {
+                    tempGrid[row][col] = num;
+                    if (solveSudoku(tempGrid, nextRow, nextCol)) {
+                        return true;
+                    }
+                    tempGrid[row][col] = 0;
+                }
+            }
+
+            return false;
+        }
+
+        // Remove numbers to create puzzle
+        function removeNumbers(tempGrid, difficulty) {
+            const cellsToRemove = 40 + (difficulty * 10);
+            let removed = 0;
+
+            while (removed < cellsToRemove) {
+                const row = Math.floor(Math.random() * 9);
+                const col = Math.floor(Math.random() * 9);
+
+                if (tempGrid[row][col] !== 0) {
+                    tempGrid[row][col] = 0;
+                    removed++;
+                }
+            }
+        }
+
+        // Generate a new sudoku puzzle
+        function generatePuzzle() {
+            const tempGrid = [];
+            for (let i = 0; i < 9; i++) {
+                tempGrid[i] = [];
+            }
+            clearBoard(tempGrid);
+
+            // Fill diagonal 3x3 boxes with random numbers
+            for (let box = 0; box < 3; box++) {
+                const nums = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+                
+                // Fisher-Yates shuffle
+                for (let i = 8; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [nums[i], nums[j]] = [nums[j], nums[i]];
+                }
+
+                let idx = 0;
+                for (let i = 0; i < 3; i++) {
+                    for (let j = 0; j < 3; j++) {
+                        tempGrid[box * 3 + i][box * 3 + j] = nums[idx++];
+                    }
+                }
+            }
+
+            // Solve the puzzle
+            solveSudoku(tempGrid, 0, 0);
+
+            // Copy to game grid
+            for (let i = 0; i < 9; i++) {
+                for (let j = 0; j < 9; j++) {
+                    gameState.grid[i][j].value = tempGrid[i][j];
+                    gameState.grid[i][j].original = tempGrid[i][j];
+                }
+            }
+
+            // Remove numbers (medium difficulty)
+            removeNumbers(tempGrid, 1);
+
+            for (let i = 0; i < 9; i++) {
+                for (let j = 0; j < 9; j++) {
+                    gameState.grid[i][j].value = tempGrid[i][j];
+                    if (tempGrid[i][j] !== 0) {
+                        gameState.grid[i][j].original = tempGrid[i][j];
+                    } else {
+                        gameState.grid[i][j].original = 0;
+                    }
+                }
+            }
+        }
+
+        // Check if board is complete
+        function isBoardComplete() {
+            for (let i = 0; i < 9; i++) {
+                for (let j = 0; j < 9; j++) {
+                    if (gameState.grid[i][j].value === 0) return false;
+                }
+            }
+            return true;
+        }
+
+        // Draw the game
+        function drawGame() {
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, PANEL_WIDTH, PANEL_HEIGHT);
+
+            // Draw grid cells
+            for (let row = 0; row < 9; row++) {
+                for (let col = 0; col < 9; col++) {
+                    const x = col * CELL_SIZE;
+                    const y = row * CELL_SIZE;
+
+                    let cellColor = 'white';
+
+                    // Highlight selected cell
+                    if (gameState.selectedRow === row && gameState.selectedCol === col) {
+                        cellColor = 'rgb(200, 220, 255)'; // Light blue
+                    }
+                    // Highlight row and column of selected cell
+                    else if (gameState.selectedRow === row || gameState.selectedCol === col) {
+                        cellColor = 'rgb(240, 240, 240)'; // Light gray
+                    }
+
+                    ctx.fillStyle = cellColor;
+                    ctx.fillRect(x, y, CELL_SIZE, CELL_SIZE);
+
+                    ctx.strokeStyle = 'black';
+                    ctx.lineWidth = 1;
+                    ctx.strokeRect(x, y, CELL_SIZE, CELL_SIZE);
+
+                    // Draw cell value
+                    if (gameState.grid[row][col].value > 0) {
+                        let textColor = 'black';
+                        // Different color for original numbers
+                        if (gameState.grid[row][col].original > 0) {
+                            textColor = 'gray';
+                        }
+
+                        ctx.fillStyle = textColor;
+                        ctx.font = 'bold 20px Arial';
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        ctx.fillText(
+                            gameState.grid[row][col].value,
+                            x + CELL_SIZE / 2,
+                            y + CELL_SIZE / 2
+                        );
+                    }
+                }
+            }
+
+            // Draw thick lines for 3x3 boxes
+            ctx.strokeStyle = 'black';
+            ctx.lineWidth = 3;
+
+            ctx.beginPath();
+            ctx.moveTo(180, 0);
+            ctx.lineTo(180, 540);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(360, 0);
+            ctx.lineTo(360, 540);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(0, 180);
+            ctx.lineTo(540, 180);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(0, 360);
+            ctx.lineTo(540, 360);
+            ctx.stroke();
+
+            // Draw UI at bottom
+            ctx.fillStyle = 'rgb(64, 64, 64)';
+            ctx.fillRect(0, 540, PANEL_WIDTH, 60);
+
+            ctx.fillStyle = 'white';
+            ctx.font = '15px Arial';
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'top';
+            ctx.fillText('1-9: Enter | DEL: Clear | R: Reset | W: New', 10, 550);
+
+            if (gameState.isWon === 1) {
+                ctx.fillStyle = 'yellow';
+                ctx.font = 'bold 25px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('YOU WIN!', 270, 555);
+            }
+
+            ctx.fillStyle = 'white';
+            ctx.font = '15px Arial';
+            ctx.textAlign = 'left';
+            ctx.fillText('Mistakes: ' + gameState.mistakes, PANEL_WIDTH - 150, 550);
+            ctx.fillText('Selected: ' + gameState.selectedRow + ',' + gameState.selectedCol, 10, 570);
+        }
+
+        // Handle user input
+        function handleInput(e) {
+            const key = e.key.toLowerCase();
+
+            // Number input (1-9)
+            if (key >= '1' && key <= '9') {
+                const num = parseInt(key);
+                if (gameState.selectedRow >= 0 && gameState.selectedRow < 9 &&
+                    gameState.selectedCol >= 0 && gameState.selectedCol < 9 &&
+                    gameState.grid[gameState.selectedRow][gameState.selectedCol].original === 0) {
+                    if (isValidPlacement(gameState.selectedRow, gameState.selectedCol, num)) {
+                        gameState.grid[gameState.selectedRow][gameState.selectedCol].value = num;
+                        console.log('Placed ' + num + ' at row=' + gameState.selectedRow + ', col=' + gameState.selectedCol);
+                    }
+                }
+            }
+
+            // Delete/Backspace
+            if (e.key === 'Delete' || e.key === 'Backspace') {
+                if (gameState.selectedRow >= 0 && gameState.selectedCol >= 0) {
+                    if (gameState.grid[gameState.selectedRow][gameState.selectedCol].original === 0) {
+                        gameState.grid[gameState.selectedRow][gameState.selectedCol].value = 0;
+                    }
+                }
+            }
+
+            // Reset game (R)
+            if (key === 'r') {
+                for (let i = 0; i < 9; i++) {
+                    for (let j = 0; j < 9; j++) {
+                        if (gameState.grid[i][j].original === 0) {
+                            gameState.grid[i][j].value = 0;
+                        }
+                    }
+                }
+                gameState.mistakes = 0;
+                gameState.isWon = 0;
+            }
+
+            // New game (W)
+            if (key === 'w') {
+                initializeGame();
+            }
+
+            // Check for win
+            if (isBoardComplete()) {
+                gameState.isWon = 1;
+            }
+        }
+
+        // Mouse click handler
+        canvas.addEventListener('click', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            if (y < 540) {
+                const col = Math.floor(x / CELL_SIZE);
+                const row = Math.floor(y / CELL_SIZE);
+
+                if (row >= 0 && row < 9 && col >= 0 && col < 9) {
+                    gameState.selectedRow = row;
+                    gameState.selectedCol = col;
+                    console.log('Selected: row=' + row + ', col=' + col);
+                }
+            }
+        });
+
+        // Keyboard handler
+        window.addEventListener('keydown', handleInput);
+
+        // Initial game setup
+        initializeGame();
+
+        // Game loop
+        function gameLoop() {
+            drawGame();
+            requestAnimationFrame(gameLoop);
+        }
+
+        gameLoop();
+    </script>
+</body>
+</html>
