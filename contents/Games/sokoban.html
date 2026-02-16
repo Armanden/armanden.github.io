@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sokoban Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, white 0%, gray 100%);
+        }
+
+        
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .info {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            font-size: 1.1em;
+        }
+
+        .info div {
+            background: #f0f0f0;
+            padding: 10px 20px;
+            border-radius: 8px;
+            min-width: 120px;
+        }
+
+        .info label {
+            color: #666;
+            display: block;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .info span {
+            color: #666;
+            font-weight: bold;
+            font-size: 1.3em;
+        }
+
+        #gameBoard {
+            display: inline-block;
+            margin: 30px 0;
+            background: #333;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .game-row {
+            display: flex;
+            gap: 2px;
+        }
+
+        .game-cell {
+            width: 40px;
+            height: 40px;
+            background: #666;
+            border: 1px solid #444;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            border-radius: 4px;
+            position: relative;
+        }
+
+        .game-cell.wall {
+            background: #222;
+        }
+
+        .game-cell.goal {
+            background: #e8f5e9;
+            border: 2px solid #4caf50;
+        }
+
+        .game-cell.goal::after {
+            content: '◯';
+            color: #4caf50;
+            font-size: 20px;
+        }
+
+        .game-cell.player {
+            background: #fff3e0;
+        }
+
+        .game-cell.box {
+            background: #fff3e0;
+        }
+
+        .game-cell.box-on-goal {
+            background: #c8e6c9;
+        }
+
+        .controls {
+            margin: 30px 0;
+        }
+
+       
+        button {
+            padding: 12px 30px;
+            font-size: 1em;
+            background: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 0 10px;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .message {
+            font-size: 1.3em;
+            margin: 20px 0;
+            min-height: 30px;
+        }
+
+        .message.success {
+            color: #4caf50;
+            font-weight: bold;
+        }
+
+        .message.moves {
+            color: #667eea;
+        }
+
+        .level-select {
+            margin: 20px 0;
+        }
+
+        .level-select select {
+            padding: 10px;
+            font-size: 1em;
+            border-radius: 5px;
+            border: 2px solid #667eea;
+            cursor: pointer;
+        }
+
+        .instructions {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: left;
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #555;
+        }
+
+        .instructions h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .instructions p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Sokoban</h1>
+        
+        <div class="info">
+            <div>
+                <label>Moves</label>
+                <span id="moves">0</span>
+            </div>
+            <div>
+                <label>Level</label>
+                <span id="levelDisplay">1</span>
+            </div>
+            <div>
+                <label>Boxes</label>
+                <span id="boxesPlaced">0</span>/<span id="totalBoxes">0</span>
+            </div>
+        </div>
+
+        <div id="gameBoard"></div>
+
+        <div class="message" id="message"></div>
+
+       
+
+        <div class="level-select">
+            <label for="levelSelect">Select Level:</label>
+            <select id="levelSelect" onchange="selectLevel(this.value)">
+                <option value="0">Level 1</option>
+                
+            </select>
+        </div>
+<div>
+  <br><p><a href="gindex.html">Back to Games Page</a></p><br>
+    <p><a href="../../index.html">Back to Homepage</a></p>
+</div>
+       
+    </div>
+
+    <script>
+        // Game levels
+        const levels = [
+            {
+                width: 8,
+                height: 8,
+                walls: [
+                    [1,1],[1,2],[1,3],[1,4],[1,5],[1,6],
+                    [2,1],[2,6],
+                    [3,1],[3,6],
+                    [4,1],[4,6],
+                    [5,1],[5,6],
+                    [6,1],[6,2],[6,3],[6,4],[6,5],[6,6]
+                ],
+                player: [3, 3],
+                boxes: [[3, 4]],
+                goals: [[5, 4]]
+            }
+           
+        ];
+
+        let currentLevel = 0;
+        let gameState = {
+            playerPos: [0, 0],
+            boxes: [],
+            moves: 0,
+            goals: []
+        };
+
+        function initLevel(levelIndex) {
+            const level = levels[levelIndex];
+            gameState.playerPos = [...level.player];
+            gameState.boxes = level.boxes.map(b => [...b]);
+            gameState.goals = level.goals.map(g => [...g]);
+            gameState.moves = 0;
+            currentLevel = levelIndex;
+            document.getElementById('levelDisplay').textContent = currentLevel + 1;
+            document.getElementById('levelSelect').value = levelIndex;
+            renderGame();
+        }
+
+        function renderGame() {
+            const level = levels[currentLevel];
+            const board = document.getElementById('gameBoard');
+            board.innerHTML = '';
+
+            for (let y = 0; y < level.height; y++) {
+                const row = document.createElement('div');
+                row.className = 'game-row';
+
+                for (let x = 0; x < level.width; x++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'game-cell';
+
+                    const isWall = level.walls.some(w => w[0] === x && w[1] === y);
+                    const isPlayer = gameState.playerPos[0] === x && gameState.playerPos[1] === y;
+                    const boxIndex = gameState.boxes.findIndex(b => b[0] === x && b[1] === y);
+                    const isGoal = gameState.goals.some(g => g[0] === x && g[1] === y);
+
+                    if (isWall) {
+                        cell.classList.add('wall');
+                        cell.textContent = '█';
+                    } else if (isGoal) {
+                        cell.classList.add('goal');
+                        if (boxIndex !== -1) {
+                            cell.classList.add('box-on-goal');
+                            cell.textContent = '📦';
+                        }
+                    } else if (boxIndex !== -1) {
+                        cell.classList.add('box');
+                        cell.textContent = '📦';
+                    } else if (isPlayer) {
+                        cell.classList.add('player');
+                        cell.textContent = '🤖';
+                    }
+
+                    row.appendChild(cell);
+                }
+
+                board.appendChild(row);
+            }
+
+            updateUI();
+            checkLevelComplete();
+        }
+
+        function updateUI() {
+            document.getElementById('moves').textContent = gameState.moves;
+            const boxesOnGoals = gameState.boxes.filter(box =>
+                gameState.goals.some(goal => goal[0] === box[0] && goal[1] === box[1])
+            ).length;
+            document.getElementById('boxesPlaced').textContent = boxesOnGoals;
+            document.getElementById('totalBoxes').textContent = gameState.boxes.length;
+        }
+
+        function movePlayer(direction) {
+            const [x, y] = gameState.playerPos;
+            let newX = x, newY = y;
+            const level = levels[currentLevel];
+
+            switch(direction) {
+                case 'up': newY = y - 1; break;
+                case 'down': newY = y + 1; break;
+                case 'left': newX = x - 1; break;
+                case 'right': newX = x + 1; break;
+            }
+
+            // Check if new position is within bounds and not a wall
+            if (newX < 0 || newX >= level.width || newY < 0 || newY >= level.height) return;
+            if (level.walls.some(w => w[0] === newX && w[1] === newY)) return;
+
+            // Check if there's a box
+            const boxIndex = gameState.boxes.findIndex(b => b[0] === newX && b[1] === newY);
+            if (boxIndex !== -1) {
+                // Try to push the box
+                const box = gameState.boxes[boxIndex];
+                let boxNewX = box[0] + (newX - x);
+                let boxNewY = box[1] + (newY - y);
+
+                // Check if box can be pushed
+                if (boxNewX < 0 || boxNewX >= level.width || boxNewY < 0 || boxNewY >= level.height) return;
+                if (level.walls.some(w => w[0] === boxNewX && w[1] === boxNewY)) return;
+                if (gameState.boxes.some((b, i) => i !== boxIndex && b[0] === boxNewX && b[1] === boxNewY)) return;
+
+                // Push the box
+                gameState.boxes[boxIndex] = [boxNewX, boxNewY];
+            }
+
+            gameState.playerPos = [newX, newY];
+            gameState.moves++;
+            renderGame();
+        }
+
+        function checkLevelComplete() {
+            const allBoxesOnGoals = gameState.boxes.every(box =>
+                gameState.goals.some(goal => goal[0] === box[0] && goal[1] === box[1])
+            );
+
+            const messageEl = document.getElementById('message');
+            if (allBoxesOnGoals && gameState.boxes.length > 0) {
+                messageEl.className = 'message success';
+                messageEl.textContent = `✨ Level ${currentLevel + 1} Complete! (${gameState.moves} moves)`;
+            } else {
+                messageEl.className = 'message moves';
+                messageEl.textContent = '';
+            }
+        }
+
+        function resetLevel() {
+            initLevel(currentLevel);
+            document.getElementById('message').textContent = '';
+        }
+
+        function nextLevel() {
+            if (currentLevel < levels.length - 1) {
+                initLevel(currentLevel + 1);
+                document.getElementById('message').textContent = '';
+            } else {
+                alert('🎉 You completed all levels! Congratulations!');
+                initLevel(0);
+            }
+        }
+
+        function selectLevel(levelIndex) {
+            initLevel(parseInt(levelIndex));
+            document.getElementById('message').textContent = '';
+        }
+
+        // Keyboard controls
+        document.addEventListener('keydown', (e) => {
+            switch(e.key) {
+                case 'ArrowUp': movePlayer('up'); e.preventDefault(); break;
+                case 'ArrowDown': movePlayer('down'); e.preventDefault(); break;
+                case 'ArrowLeft': movePlayer('left'); e.preventDefault(); break;
+                case 'ArrowRight': movePlayer('right'); e.preventDefault(); break;
+                case 'w':
+                case 'W': movePlayer('up'); break;
+                case 's':
+                case 'S': movePlayer('down'); break;
+                case 'a':
+                case 'A': movePlayer('left'); break;
+                case 'd':
+                case 'D': movePlayer('right'); break;
+            }
+        });
+
+        // Initialize game
+        initLevel(0);
+    </script>
+
+    
+
+</body>
+
+
+
+</html>
