@@ -1,4 +1,4 @@
-const SQUARE_SIZE = 50;
+const SQUARE_SIZE = 52;
 const MAX_SPEED = 3;
 const MAX_LEVEL = 10;
 const SQUARES_PER_LEVEL = 10;
@@ -90,10 +90,34 @@ function getTimeSeconds() {
     return performance.now() / 1000;
 }
 
+//
+//
 function initSquares(count) {
+    const spawnRadius = 400;   // radius around player
+    const safeZone = 150;      // min distance from player
+
     for (let i = 0; i < count; i++) {
-        squaresX[i] = Math.random() * (SCX - SQUARE_SIZE);
-        squaresY[i] = Math.random() * (SCY - SQUARE_SIZE);
+        let distanceFromPlayer;
+
+        do {
+            const angle = Math.random() * Math.PI * 2;
+            const distance = Math.random() * spawnRadius;
+
+            squaresX[i] = playerX + Math.cos(angle) * distance;
+            squaresY[i] = playerY + Math.sin(angle) * distance;
+
+            const dx = squaresX[i] - playerX;
+            const dy = squaresY[i] - playerY;
+            distanceFromPlayer = Math.sqrt(dx * dx + dy * dy);
+
+        } while (
+            distanceFromPlayer < safeZone ||
+            squaresX[i] < 0 ||
+            squaresY[i] < 0 ||
+            squaresX[i] > SCX - SQUARE_SIZE ||
+            squaresY[i] > SCY - SQUARE_SIZE
+        );
+
         velX[i] = rand();
         velY[i] = rand();
 
@@ -114,21 +138,13 @@ function gameLoop() {
 }
 
 function handleMovement() {
-    if (keys['ArrowRight'] && (playerX + playerRadius + speed <= SCX)) {
-        playerX += speed;
-    }
-    if (keys['ArrowLeft'] && (playerX - playerRadius - speed >= 0)) {
-        playerX -= speed;
-    }
-    if (keys['ArrowUp'] && (playerY - playerRadius - speed >= 0
-)) {
-playerY -= speed;
+    if (keys['ArrowRight'] && (playerX + playerRadius + speed <= SCX)) playerX += speed;
+    if (keys['ArrowLeft'] && (playerX - playerRadius - speed >= 0)) playerX -= speed;
+    if (keys['ArrowUp'] && (playerY - playerRadius - speed >= 0)) playerY -= speed;
+    if (keys['ArrowDown'] && (playerY + playerRadius + speed <= SCY)) playerY += speed;
 }
-if (keys['ArrowDown'] && (playerY + playerRadius + speed <= SCY)) {
-playerY += speed;
-}
-							    }
-							    function updateScore() {
+
+function updateScore() {
     const now = getTimeSeconds();
     if (now - lastScoreTime >= 1.0) {
         score++;
@@ -141,29 +157,14 @@ function updateSquares() {
         squaresX[i] += velX[i];
         squaresY[i] += velY[i];
 
-        if (squaresX[i] <= 0) {
-            squaresX[i] = 0;
-            velX[i] *= -1;
-        }
-        if (squaresX[i] >= SCX - SQUARE_SIZE) {
-            squaresX[i] = SCX - SQUARE_SIZE;
-            velX[i] *= -1;
-        }
-        if (squaresY[i] <= 0) {
-            squaresY[i] = 0;
-            velY[i] *= -1;
-        }
-        if (squaresY[i] >= SCY - SQUARE_SIZE) {
-            squaresY[i] = SCY - SQUARE_SIZE;
-            velY[i] *= -1;
-        }
+        if (squaresX[i] <= 0 || squaresX[i] >= SCX - SQUARE_SIZE) velX[i] *= -1;
+        if (squaresY[i] <= 0 || squaresY[i] >= SCY - SQUARE_SIZE) velY[i] *= -1;
     }
 }
 
 function checkCollision() {
     for (let i = 0; i < squaresCount; i++) {
-        if (checkCollisionCircleRec(playerX, playerY, playerRadius,
-                squaresX[i], squaresY[i], SQUARE_SIZE, SQUARE_SIZE)) {
+        if (checkCollisionCircleRec(playerX, playerY, playerRadius, squaresX[i], squaresY[i], SQUARE_SIZE, SQUARE_SIZE)) {
             gameOver = true;
             finalScore = score * 10;
             break;
@@ -213,9 +214,7 @@ function drawStartScreen() {
 
 function drawGameOverScreen() {
     ctx.fillStyle = 'blue';
-    for (let i = 0; i < squaresCount; i++) {
-        ctx.fillRect(squaresX[i], squaresY[i], SQUARE_SIZE, SQUARE_SIZE);
-    }
+    for (let i = 0; i < squaresCount; i++) ctx.fillRect(squaresX[i], squaresY[i], SQUARE_SIZE, SQUARE_SIZE);
 
     ctx.fillStyle = 'red';
     drawPlayer();
@@ -231,36 +230,34 @@ function drawGameOverScreen() {
 
 function drawGamePlay() {
     ctx.fillStyle = 'blue';
-    for (let i = 0; i < squaresCount; i++) {
-        ctx.fillRect(squaresX[i], squaresY[i], SQUARE_SIZE, SQUARE_SIZE);
-    }
+    for (let i = 0; i < squaresCount; i++) ctx.fillRect(squaresX[i], squaresY[i], SQUARE_SIZE, SQUARE_SIZE);
 
-   
-        ctx.fillStyle = 'green';
-        drawPlayer();
+    ctx.fillStyle = 'green';
+    drawPlayer();
 
-        ctx.fillStyle = 'white';
-        ctx.font = '20px SansSerif';
-        ctx.fillText("Score: " + score, 10, 25);
-        
-        const levelHud = "Level: " + currentLevel;
-        ctx.fillStyle = 'lightgray';
-        ctx.fillText(levelHud, SCX - ctx.measureText(levelHud).width - 10, 25);
-    }
+    ctx.fillStyle = 'white';
+    ctx.font = '20px SansSerif';
+    ctx.fillText("Score: " + score, 10, 25);
+    
+    const levelHud = "Level: " + currentLevel;
+    ctx.fillStyle = 'lightgray';
+    ctx.fillText(levelHud, SCX - ctx.measureText(levelHud).width - 10, 25);
+}
 
-    function drawPlayer() {
-        ctx.beginPath();
-        ctx.arc(playerX, playerY, playerRadius, 0, Math.PI * 2);
-        ctx.fillStyle = 'green';
-        ctx.fill();
-        ctx.closePath();
-    }
+function drawPlayer() {
+    ctx.beginPath();
+    ctx.arc(playerX, playerY, playerRadius, 0, Math.PI * 2);
+    ctx.fillStyle = 'green';
+    ctx.fill();
+    ctx.closePath();
+}
 
-    function drawCenteredText(text, x, y) {
-        const metrics = ctx.measureText(text);
-        const width = metrics.width;
-        ctx.fillText(text, x - width / 2, y);
-    }
+function drawCenteredText(text, x, y) {
+    const metrics = ctx.measureText(text);
+    const width = metrics.width;
+    ctx.fillText(text, x - width / 2, y);
+}
 
-    init();
+init();
+
 
