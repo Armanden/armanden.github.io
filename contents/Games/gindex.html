@@ -7,39 +7,58 @@
     <link rel="stylesheet" href="../../style.css"> <!-- Link to your CSS stylesheet -->
    
 </head>
+
+<style>
+.wrapper {
+   display: flex;
+    justify-content: space-between; /* left & right spacing */
+    align-items: flex-start; /* keep at top */
+}
+
+.center {
+    width: 50%;
+    margin: 0 auto;   /* THIS truly centers it */
+    text-align: center;
+}
+
+.right {
+    position: absolute;
+    right: 0;
+    top: 0;
+    text-align: right;
+}
+
+  </style>
+
+
+
 <body>
    <header>
         <h1>Games</h1>
         <p>Simple and Small</p>
     </header>
 
-
-  <div>
+<div class="wrapper">
+  <div class="center">
 
     <h1>Dodge the Squares</h1>
 <button onclick="location.href='dgts.html'">Dodge the Squares</button>
 <br>
 
-<div>
+
 
 <h1>Snake</h1>
 <button onclick="location.href='snake.html'">Snake</button>
 
-</div>
-
-
-<br>
- <div>
     <h1>Chess</h1>
 <button onclick="location.href='chess.html'">Chess</button>
 <br>
-
- <div>
-    <h1>Sokoban</h1>
+   <h1>Sokoban</h1>
 <button onclick="location.href='sokoban.html'">Sokoban</button>
 <br>
+</div>
 
-<div>
+  <div class="center">
     <h1>Sudoku</h1>
 <button onclick="location.href='sudoku.html'">Sudoku</button>
 <br>
@@ -52,7 +71,13 @@
 <button onclick="location.href='wordle.html'">Wordle</button>
 <br>
 
+ <h1>Block Breaker</h1>
+<button onclick="location.href='blockbreaker.html'">Block Breaker</button>
+<br>
+</div>
+</div>
 
+<div class="center">
 <br>
 <a href="../../index.html">Back to Homepage</a>
 </div>
