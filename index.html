@@ -13,102 +13,61 @@
         <p>AI sentient slop</p>
     </header>
 
-<div class="button-container">	
-<div>
-  <button onclick="location.href='https://github.com/armanden'">Github</button> 
-</div>
+<body>
+
+
+<div class="wrapper">
+  <div class="center">
+
+    <h1>Dodge the Squares</h1>
+<button onclick="location.href='dgts.html'">Dodge the Squares</button>
 <br>
-<div>
-<button onclick="location.href='contents/Games/gindex.html'">Games</button>
 
-</div>
+
+
+<h1>Snake</h1>
+<button onclick="location.href='snake.html'">Snake</button>
+
+    <h1>Chess</h1>
+<button onclick="location.href='chess.html'">Chess</button>
 <br>
-<div>
-<button onclick="location.href='contents/Blog/bindex.html'">Blog</button>
-
-</div>
+   <h1>Sokoban</h1>
+<button onclick="location.href='sokoban.html'">Sokoban</button>
 <br>
-<div>
-<button onclick="location.href='contents/Articles/aindex.html'">Articles</button>
+</div>
 
+  <div class="center">
+    <h1>Sudoku</h1>
+<button onclick="location.href='sudoku.html'">Sudoku</button>
+<br>
+
+ <h1>Tic Tac Toe</h1>
+<button onclick="location.href='tic-tac-toe.html'">Tic Tac Toe</button>
+<br>
+
+ <h1>Wordle Clone</h1>
+<button onclick="location.href='wordle.html'">Wordle</button>
+<br>
+
+ <h1>Block Breaker</h1>
+<button onclick="location.href='blockbreaker.html'">Block Breaker</button>
+<br>
 </div>
 </div>
 
-<hr>
-</hr>
+<div class="center">
+<br>
 
-<h1><br>Featured:  </h1>
-    
-    <div class="container">
-        <div class="post">
-            <h2><a href="contents/post1.html">Weird innit</a></h2>
-            <p>Published on: <time datetime="2026-01-22">January 22, 2026</time></p>
-            <p>Life is weird</p>
-        </div>
-        
-        <div class="post">
-            <h2><a href="contents/post2.html">Just Learned html</a></h2>
-            <p>Published on: <time datetime="2026-01-23">January 23, 2026</time></p>
-            <p>Kind of but its soso</p>
-        </div>
+<a href="/downloads/dindex.html">Download Games</a>
 
-        <!-- More blog posts can be added here in similar structure -->
-    </div>
+</div>
 
-    
-    <footer>
-   <body>
-    <button onclick="rollDice()">Random Stuff</button>
-    <div id="dice">🎲</div>
-    <div id="result"></div>
+<footer>
 
-    <script>
-        function rollDice() {
-            const dice = document.getElementById('dice');
-            const resultDiv = document.getElementById('result');
-            const rollTimes = 5; // Number of animation rolls
+These are games, go make your own
+  
+  </footer>
 
-            // Dice roll animation
-            for (let i = 0; i < rollTimes; i++) {
-                setTimeout(() => {
-                    dice.style.transform = 'rotate(' + (Math.random() * 360) + 'deg)';
-                }, i * 200); // Adjust timing for each roll
-            }
 
-            // Final dice result
-            setTimeout(() => {
-                const result = Math.floor(Math.random() * 6) + 1;
-                resultDiv.textContent = `You rolled a ${result}!`;
-                dice.textContent = `🎲 ${result} 🎲`; // Showing the rolled number
-                dice.style.transform = 'rotate(0deg)'; // Reset rotation
-
- // Redirect based on the rolled number
-                switch (result) {
-                    case 1:
-                        window.location.href = 'contents/random/random1.html'; // Replace with your actual URL
-                        break;
-                    case 2:
-                        window.location.href = 'contents/random/random2.html';
-                        break;
-                    case 3:
-                        window.location.href = 'contents/random/random3.html';
-                        break;
-                    case 4:
-                        window.location.href = 'contents/random/random4.html';
-                        break;
-                    case 5:
-                        window.location.href = 'contents/random/random5.html';
-                        break;
-                    case 6:
-                        window.location.href = 'contents/random/random6.html';
-                        break;
-                }
-
-		
-            }, rollTimes * 200); // Set final result after animation completes
-        }
-    </script>
-</body>
-    </footer>
 </body>
 </html>

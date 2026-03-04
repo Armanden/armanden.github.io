@@ -1,9 +1,7 @@
-/* Polished Dark Theme Styles */
 
-/* Body */
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #1e1e2f; /* dark navy */
+    background-color: #1e1e2f;
     color: #e0e0e0;
     margin: 0;
     padding: 20px;
@@ -11,7 +9,7 @@ body {
 
 /* Header */
 header {
-    background: #3d3d5b; /* purple */
+    background: #142FA6; 
     color: white;
     text-align: center;
     padding: 20px;
@@ -27,7 +25,7 @@ main {
 
 /* Button */
 button {
-    background: #4a90e2; /* light blue */
+    background: #4a90e2;
     color: white;
     border: none;
     padding: 12px 24px;
@@ -37,25 +35,25 @@ button {
 }
 
 button:hover {
-    background: #357ab8; /* darker blue */
+    background: #357ab8; 
     transform: scale(1.05);
 }
 
 /* Links */
 a {
-    color: #a1c4fd; /* light purple */
+    color: #a1c4fd;
     text-decoration: none;
 }
 
 a:hover {
     text-decoration: underline;
-    color: #d3a8ff; /* darker purple */
+    color: #d3a8ff;
 }
 
-/* Card Component */
+
 .card {
-    background-color: #2e2e4c; /* slightly lighter navy */
-    border: 1px solid #4a90e2; /* blue */
+    background-color: #2e2e4c; 
+    border: 1px solid #4a90e2; 
     border-radius: 10px;
     padding: 15px;
     margin: 15px 0;
@@ -66,7 +64,7 @@ a:hover {
 footer {
     text-align: center;
     padding: 15px;
-    background: #3d3d5b; /* purple */
+    background: #142FA6; /* purple */
     color: white;
     border-radius: 10px;
     margin-top: 20px;
@@ -78,4 +76,23 @@ footer {
 
 .button-container button {
     margin: 5px; /* Add spacing between buttons */
+}
+
+.wrapper {
+   display: flex;
+    justify-content: space-between; /* left & right spacing */
+    align-items: flex-start; /* keep at top */
+}
+
+.center {
+    width: 50%;
+    margin: 0 auto;   /* THIS truly centers it */
+    text-align: center;
+}
+
+.right {
+    position: absolute;
+    right: 0;
+    top: 0;
+    text-align: right;
 }
