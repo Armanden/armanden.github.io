@@ -9,11 +9,11 @@ body {
 
 /* Header */
 header {
-    background: #142FA6; 
+    background: #483d8b; 
     color: white;
     text-align: center;
     padding: 20px;
-    border-radius: 10px;
+   
     margin-bottom: 20px;
 }
 
@@ -25,17 +25,17 @@ main {
 
 /* Button */
 button {
-    background: #4a90e2;
+    background: #8a2be2;
     color: white;
     border: none;
     padding: 12px 24px;
-    border-radius: 25px;
+    
     cursor: pointer;
     transition: background 0.3s, transform 0.3s;
 }
 
 button:hover {
-    background: #357ab8; 
+    background: #9400d3; 
     transform: scale(1.05);
 }
 
@@ -64,9 +64,9 @@ a:hover {
 footer {
     text-align: center;
     padding: 15px;
-    background: #142FA6; /* purple */
+    background: #483d8b; 
     color: white;
-    border-radius: 10px;
+   
     margin-top: 20px;
 }
 .button-container {
